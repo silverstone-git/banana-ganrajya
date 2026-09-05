@@ -1,0 +1,27 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local SQLite databases & backups
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+banana.db*
+*.bak
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+venv_banana/
+.pytest_cache/
+.coverage
+
+# Logs
+*.log

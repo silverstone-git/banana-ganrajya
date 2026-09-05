@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: banana-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount the SQLite database locally so your data persists across containers
+      - ./banana.db:/backend/banana.db
+    env_file:
+      # Automatically reads the core configuration variables from your root .env file
+      - ../.env
+    restart: unless-stopped

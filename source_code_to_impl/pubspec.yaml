@@ -1,0 +1,52 @@
+name: banana_app
+description: "Banana Ganrajya — a news reading app UI bootstrap (Flutter + Riverpod + go_router)."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management — this bootstrap uses plain Notifier/NotifierProvider
+  # (no code generation needed to build). riverpod_annotation is left in as
+  # a dependency so you can opt into @riverpod codegen later without a
+  # pubspec change — see core/providers/bookmarks_provider.dart.
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Navigation
+  go_router: ^14.6.2
+
+  # Fonts (Source Serif 4 for editorial content, Work Sans for UI/labels)
+  google_fonts: ^6.2.1
+
+  # Material Symbols (outlined) icon set — matches the Stitch/HTML mockups
+  material_symbols_icons: ^4.2785.1
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+  # Only needed if/when you add @riverpod-annotated classes or freezed
+  # models. Run: dart run build_runner build --delete-conflicting-outputs
+  build_runner: ^2.4.13
+  riverpod_generator: ^2.6.3
+  freezed: ^2.5.7
+  json_serializable: ^6.9.0
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
+
+  riverpod_lint: ^2.6.3
+  custom_lint: ^0.6.4
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
