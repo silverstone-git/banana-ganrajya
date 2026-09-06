@@ -60,8 +60,8 @@ The app implements a persistent bottom navigation shell:
 ## ⚡ State Management & Dynamic Themes
 
 * Standard state utilizes direct Riverpod **`Notifier` / `NotifierProvider`**.
-* **`themeModeProvider`** (in `core/providers/theme_provider.dart`) manages the active theme selection (light, dark, or system).
-* Out of the box, the app boots in **`ThemeMode.system`**, allowing the platform brightness changes (e.g. terminal `'b'` hotkey in `flutter run` console) to immediately update the visual theme.
+* **`themeModeProvider`** (in `core/providers/theme_provider.dart`) manages the active theme selection (`ThemeMode.dark` or `ThemeMode.light`).
+* **Default Mode:** Out of the box, the app boots in **`ThemeMode.dark`** as the default experience. User toggles in Settings (`Appearance`) persist to **`SharedPreferences`** (`app_theme_mode`), so switching to light mode remains saved across app launches.
 
 ---
 
@@ -277,6 +277,35 @@ During Phase 4, we successfully scaled the backend to a remote PostgreSQL-compat
 
 ---
 
+## 🛠️ Retrospective: Phase 5 Theme Revamp, Palette Modularity & Dark Mode Transparent Logo
+
+During Phase 5, we redesigned the visual identity and accent hierarchy of Banana Ganrajya, transitioning from the legacy saffron motif to an editorial Dark Green and Yellow brand language, engineered modular separation of concerns with dynamic palette contracts, and integrated automatic transparent brand asset switching for dark mode.
+
+### 1. Theme Color Token Revamp & Flipped Accent Inversion
+* **The Design Requirements:**
+  * **Light Mode:** Primary accent is **Dark Green (`#0A3B2A`)** with crisp white text (`#FFFFFF`). Secondary accent is **Yellow (`#E6C925`)** with dark contrast text (`#1A1C1C`).
+  * **Dark Mode:** Roles flip for optimal contrast against dark charcoal surfaces (`#121313`): Primary accent is **Banana Yellow (`#FFE135`)** with dark charcoal text (`#121313`, >13:1 contrast ratio), and secondary accent is a **Lighter Green (`#16805B`)** with white text (`#FFFFFF`).
+* **The Architectural Abstraction:** Rather than scattering ternary conditions (`isDark ? ... : ...`) across a monolithic class, we introduced a modular palette architecture:
+  * **`AppPalette`** (`lib/core/theme/palette/app_palette.dart`): Abstract contract defining all semantic color roles (primary, secondary, surfaces, containers, outlines, error, and subscriber gradients).
+  * **`LightPalette`** (`lib/core/theme/palette/light_palette.dart`): Concrete light implementation.
+  * **`DarkPalette`** (`lib/core/theme/palette/dark_palette.dart`): Concrete dark implementation with flipped contrast hierarchy.
+  * **`AppColors`** (`lib/core/theme/app_colors.dart`): Serves as a backward-compatible token facade delegating to `currentPalette` (`isDark ? darkPalette : lightPalette`), ensuring zero regressions across existing widgets.
+  * **`AppTheme`** (`lib/core/theme/app_theme.dart`): Directly builds `ThemeData` instances for both `AppTheme.light` and `AppTheme.dark`.
+
+### 2. Centralized Brand Asset Abstraction & Dark Mode Transparent Logo
+* **The Nuance:** The frosted app bar (`AppHeader` and `ArticleAppBar`) renders against dark surfaces in dark mode. An opaque logo graphic renders an unsightly light bounding box on dark themes.
+* **The Solution:**
+  * Added `assets/banana_logo_header_transparent.png` (transparent background) and updated `pubspec.yaml` to register `assets/` and `assets/images/`.
+  * Created **`AppAssets`** (`lib/core/constants/app_assets.dart`), abstracting asset paths and providing a dynamic `AppAssets.headerLogo([bool? isDark])` resolver.
+  * Refactored `AppHeader` and `ArticleAppBar` to automatically query `AppAssets.headerLogo(isDark)`.
+
+### 3. Root `.gitignore` Flutter `lib/` Shadowing Pitfall
+* **The Nuance:** A generic Python `.gitignore` block at the workspace root contained `lib/` (intended for Python virtual environment libraries).
+* **The Pitfall:** Git silently ignored newly created Dart files inside the Flutter `lib/` directory (such as `lib/core/constants/app_assets.dart` and `lib/core/theme/palette/`), preventing them from being tracked or staged.
+* **The Solution:** Removed `lib/` from the root `.gitignore`, ensuring that all Flutter application code is properly version-controlled.
+
+---
+
 ## 🛠️ Verification & Build Workflows
 
 ### 1. Static Analysis & Lints
@@ -297,3 +326,4 @@ The repository enforces strict custom rules alongside standard Flutter lints. Re
   ```bash
   flutter build apk --debug -d "SM E146B"
   ```
+
