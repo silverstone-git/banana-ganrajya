@@ -39,7 +39,7 @@ This document serves as the architectural blueprint and retrospective for **Chec
    * Installed a dynamic `pydantic-settings` configuration loader capable of traversing folder directories to parse `.env` credentials in both local runtimes and container contexts.
 
 2. **SQLAlchemy 2.0, PostgreSQL & CockroachDB Data Repository**:
-   * Architected a fully normalized database schema mapping the domain requirements outlined in `DATABASE_SQL_ENTITIES_PLAN.md` to production-grade declarative ORM models.
+   * Architected a fully normalized database schema mapping the domain requirements (users, authors, articles, comments, bookmarks, transactions, reads, tags) to production-grade declarative ORM models.
    * Transitioned relational storage seamlessly from a local SQLite setup to a remote PostgreSQL-compatible CockroachDB cloud database.
    * Integrated `psycopg2-binary` and `sqlalchemy-cockroachdb` dialects with a dynamic connection scheme normalizer, mapping `postgresql://` strings automatically to `cockroachdb://` protocols for error-free connection handling on app-boot.
    * Created a constraints-aware data migration script (`migrate_sqlite_to_remote.py`) that successfully syncs tables, bookmarks, assets, and self-referencing comment trees from SQLite to the cloud with full type safety.

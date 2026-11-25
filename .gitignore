@@ -194,3 +194,5 @@ migrate_working_dir/
 
 # skill for the AI agents
 AUTH0_SKILLS
+# Cloud log exports (may contain infra hostnames)
+downloaded-logs-*.json

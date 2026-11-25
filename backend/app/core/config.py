@@ -1,9 +1,10 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./banana.db"
     
-    # Authentication & S3 / Paytm integrations (to support future steps of PLAN.md)
+    # Authentication, storage & payment integrations
     AUTH0_DOMAIN: str = "your-auth0-domain.auth0.com"
     AUTH0_CLIENT_ID: str = ""
     AUTH0_CLIENT_SECRET: str = ""
@@ -23,7 +24,19 @@ class Settings(BaseSettings):
     
     # Administrator Portal access configurations
     ADMIN_EMAIL: str = "admin@banana.in"
-    ADMIN_API_KEY: str = "secure_banana_admin_secret_key_2026"
+    # Required, no default: the app refuses to start without a real key.
+    ADMIN_API_KEY: str
+
+    @field_validator("ADMIN_API_KEY")
+    @classmethod
+    def _admin_key_must_be_set(cls, v: str) -> str:
+        v = v.strip().strip("\"'")
+        if not v:
+            raise ValueError(
+                "ADMIN_API_KEY must be set to a long random secret "
+                "(e.g. `python -c \"import secrets; print(secrets.token_urlsafe(48))\"`)."
+            )
+        return v
 
     model_config = SettingsConfigDict(
         env_file=[".env", "../.env"],

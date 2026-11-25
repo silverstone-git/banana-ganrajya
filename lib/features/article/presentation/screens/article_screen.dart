@@ -923,7 +923,7 @@ class _InlineSubscribePrompt extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {},
-            child: const Text('SUBSCRIBE TO THEPRINT'),
+            child: const Text('SUBSCRIBE TO BANANA GANRAJYA'),
           ),
         ],
       ),
