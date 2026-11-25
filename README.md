@@ -15,6 +15,10 @@
 [![Auth0](https://img.shields.io/badge/auth-Auth0-EB5424?logo=auth0&logoColor=white)](https://auth0.com)
 [![License: MIT](https://img.shields.io/badge/license-MIT-FFE135)](LICENSE)
 
+<a href="https://github.com/silverstone-git/banana-ganrajya/releases/latest/download/banana-ganrajya.apk"><img src="https://img.shields.io/badge/Download-Android_APK-0A3B2A?style=for-the-badge&logo=android&logoColor=FFE135" alt="Download Android APK" height="40"></a>
+
+<sub>Android 7.0+ · <a href="https://github.com/silverstone-git/banana-ganrajya/releases/latest">release notes</a></sub>
+
 </div>
 
 ---
