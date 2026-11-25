@@ -1,0 +1,14 @@
+.venv/
+venv/
+venv_banana/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+*.db
+*.db-journal
+banana.db*
+.git/
+.gcloudignore
+.dockerignore

@@ -32,12 +32,9 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /backend
 
-# Install curl, create PostgreSQL certificates folder, and download CockroachDB CA root certificate
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /root/.postgresql \
-    && curl -o /root/.postgresql/root.crt 'https://cockroachlabs.cloud/clusters/b91c0eaf-6468-4852-9873-98c8dfeaa5db/cert'
+# NOTE: no ~/.postgresql/root.crt is baked in. Its presence makes libpq verify the
+# server against that CA even with sslmode=require, which breaks self-hosted Postgres.
+# Use ?sslmode=verify-full&sslrootcert=... in DATABASE_URL if CA pinning is wanted.
 
 # Copy the entire isolated virtual environment from the builder stage
 COPY --from=builder /opt/venv /opt/venv
