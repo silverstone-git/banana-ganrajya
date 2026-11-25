@@ -50,9 +50,13 @@ settings = Settings()
 if settings.DATABASE_URL.startswith('"') or settings.DATABASE_URL.startswith("'"):
     settings.DATABASE_URL = settings.DATABASE_URL.strip('"\'')
 
-# Automatically rewrite postgresql:// to cockroachdb:// if connecting to CockroachDB to use the correct SQLAlchemy dialect
-if settings.DATABASE_URL.startswith("postgresql://"):
-    settings.DATABASE_URL = settings.DATABASE_URL.replace("postgresql://", "cockroachdb://", 1)
-elif settings.DATABASE_URL.startswith("postgresql+psycopg2://"):
-    settings.DATABASE_URL = settings.DATABASE_URL.replace("postgresql+psycopg2://", "cockroachdb://", 1)
+# Rewrite postgresql:// to cockroachdb:// ONLY when the target is actually CockroachDB
+# (Cockroach Cloud host or its default port), so the correct SQLAlchemy dialect is used.
+# Plain self-hosted PostgreSQL URLs are left untouched.
+_is_cockroach = "cockroachlabs.cloud" in settings.DATABASE_URL or ":26257/" in settings.DATABASE_URL
+if _is_cockroach:
+    for _prefix in ("postgresql+psycopg2://", "postgresql://"):
+        if settings.DATABASE_URL.startswith(_prefix):
+            settings.DATABASE_URL = settings.DATABASE_URL.replace(_prefix, "cockroachdb://", 1)
+            break
 

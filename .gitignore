@@ -196,3 +196,6 @@ migrate_working_dir/
 AUTH0_SKILLS
 # Cloud log exports (may contain infra hostnames)
 downloaded-logs-*.json
+
+# Local secrets
+env.postgres
